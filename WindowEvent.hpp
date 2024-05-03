@@ -33,46 +33,22 @@
 //
 //   API-neutral interface for creating windows.  Implementation needs to be provided per-platform.
 
-#ifndef WINSYSTEM_H
-#define WINSYSTEM_H
+#ifndef WINDOWEVENT_H
+#define WINDOWEVENT_H
 
-#include <stdio.h>
-#include <string.h>
-#include <sys/time.h>
-
-#include  <X11/Xlib.h>
-#include  <X11/Xatom.h>
-#include  <X11/Xutil.h>
-
-class WindowSystem {
+struct WindowEvent {
     public:
-        enum class Event {
-            Empty = 0,
-            Delete,
+        enum class Type {
+            NoEvent = 0,
+            OtherEvent,
+            DeleteEvent,
+            KeyPressEvent,
         };
 
-        bool create(const char *title, int posx, int posy, int width, int height);
-        void registerKeyFunc(void (*keyFunc)(void *ctx, unsigned char, int, int));
-
-        Display *getNativeDisplay() const;
-        Window getNativeWindow() const;
-        Event getEvents(void *ctx = NULL) const;
-
-
-    private:
-        Display *display = NULL;
-        Window window;
-        Atom deleteMessage;
-
-        const char *windowTitle = "";
-
-        /// Window width
-        int width = 320;
-
-        /// Window height
-        int height = 240;
-
-        void(*keyFunc)(void *ctx, unsigned char, int, int) = NULL;
+        Type type;
+        char keyPressed;
+        int x;
+        int y;
 };
 
-#endif // WINSYSTEM_H
+#endif // WINDOWEVENT_H
